@@ -1,5 +1,7 @@
 import React from 'react'
 import "@styles/globals.css";
+import Navbar from '@components/NavBar-home';
+import Footer from '@components/Footer';
 
 const Layout = ({children}) => {
   return (
@@ -8,9 +10,12 @@ const Layout = ({children}) => {
         <title>My App</title>
       </head>
       <body>
-        <main>
+      <Navbar/>
+       
+          
           {children}
-        </main>
+        
+        <Footer/>
       </body>
     </html>
 

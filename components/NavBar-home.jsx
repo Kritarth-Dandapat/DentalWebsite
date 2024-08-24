@@ -1,122 +1,133 @@
 // components/Navbar.js
-"use client"
-// components/Navbar.js
+"use client";
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 
 export default function Navbar() {
   const [openDropdown, setOpenDropdown] = useState(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   const toggleDropdown = (dropdown) => {
     setOpenDropdown((prev) => (prev === dropdown ? null : dropdown));
   };
 
+  const closeDropdown = () => {
+    setOpenDropdown(null);
+  };
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen((prev) => !prev);
+    closeDropdown(); // Close dropdowns when opening the mobile menu
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        closeDropdown();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
-    <nav className="bg-gray-800 text-white">
+    <nav className="bg-blue-900 text-white z-50 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo and App Name */}
           <div className="flex items-center">
-            <Link href="/" legacyBehavior>
-              <a className="flex items-center">
-                <img
-                  src="/logo.png"
-                  alt="DentalApp Logo"
-                  className="h-8 w-8 mr-2"
-                />
-                <span className="text-2xl font-bold">DentalApp</span>
-              </a>
+            <Link href="/" className="flex items-center">
+              <img
+                src="/logo.png"
+                alt="DentalApp Logo"
+                className="h-8 w-8 mr-2"
+              />
+              <span className="text-2xl font-bold">DentalApp</span>
             </Link>
           </div>
 
+          {/* Mobile Menu Button */}
+          <div className="sm:hidden">
+            <button
+              onClick={toggleMobileMenu}
+              className="text-gray-400 hover:text-white focus:outline-none"
+            >
+              <svg
+                className="h-6 w-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d={isMobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16m-7 6h7"}
+                />
+              </svg>
+            </button>
+          </div>
+
           {/* Navigation Links */}
-          <div className="flex items-center space-x-4">
-            {/* Services Dropdown */}
+          <div
+            className={`fixed inset-0 top-16 left-0 bg-blue-900 text-white transition-transform duration-300 ease-in-out transform ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'} sm:translate-x-0 sm:flex sm:space-x-4 sm:static sm:bg-transparent`}
+            ref={dropdownRef}
+          >
             <div className="relative">
+              {/* Services Dropdown */}
               <button
                 onClick={() => toggleDropdown('services')}
-                className="hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium"
+                className="hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
               >
                 Services
               </button>
               {openDropdown === 'services' && (
-                <div className="absolute left-0 mt-2 w-48 bg-white text-black shadow-lg rounded-md">
-                  <Link href="/intraoral-scanner" legacyBehavior>
-                    <a className="block px-4 py-2 text-sm hover:bg-gray-200">
-                      Intraoral Scanner
-                    </a>
+                <div className="absolute left-0 mt-2 w-48 bg-white text-black shadow-lg rounded-md z-50 transition-opacity duration-300 ease-in-out opacity-100">
+                  <Link href="/services/healscan" className="block px-4 py-2 text-sm hover:bg-gray-200">
+                    Heal Scan Mobile Application
                   </Link>
-                  <Link href="/health-tracker" legacyBehavior>
-                    <a className="block px-4 py-2 text-sm hover:bg-gray-200">
-                      Health Tracker
-                    </a>
+                  <Link href="/services/oralscan" className="block px-4 py-2 text-sm hover:bg-gray-200">
+                    Oral Scan Mobile Application
                   </Link>
-                  <Link href="/perfusion-meter" legacyBehavior>
-                    <a className="block px-4 py-2 text-sm hover:bg-gray-200">
-                      Perfusion Meter
-                    </a>
-                  </Link>
-                  <Link href="/progress-tracker" legacyBehavior>
-                    <a className="block px-4 py-2 text-sm hover:bg-gray-200">
-                      Progress Tracker
-                    </a>
-                  </Link>
-                  <Link href="/mobile-application" legacyBehavior>
-                    <a className="block px-4 py-2 text-sm hover:bg-gray-200">
-                      Mobile Application
-                    </a>
-                  </Link>
-                  <Link href="/doctors-website" legacyBehavior>
-                    <a className="block px-4 py-2 text-sm hover:bg-gray-200">
-                      Doctors Website
-                    </a>
+                  <Link href="/services/doctorControlPanel" className="block px-4 py-2 text-sm hover:bg-gray-200">
+                    Doctors Control Panel
                   </Link>
                 </div>
               )}
             </div>
 
-            {/* About Dropdown */}
             <div className="relative">
+              {/* About Dropdown */}
               <button
                 onClick={() => toggleDropdown('about')}
-                className="hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium"
+                className="hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
               >
                 About
               </button>
               {openDropdown === 'about' && (
-                <div className="absolute left-0 mt-2 w-48 bg-white text-black shadow-lg rounded-md">
-                  <Link href="/about-us" legacyBehavior>
-                    <a className="block px-4 py-2 text-sm hover:bg-gray-200">
-                      About Us
-                    </a>
+                <div className="absolute left-0 mt-2 w-48 bg-white text-black shadow-lg rounded-md z-50 transition-opacity duration-300 ease-in-out opacity-100">
+                  <Link href="/about-us" className="block px-4 py-2 text-sm hover:bg-gray-200">
+                    About Us
                   </Link>
-                  <Link href="/team" legacyBehavior>
-                    <a className="block px-4 py-2 text-sm hover:bg-gray-200">
-                      Team
-                    </a>
+                  <Link href="/team" className="block px-4 py-2 text-sm hover:bg-gray-200">
+                    Team
                   </Link>
-                  <Link href="/contact" legacyBehavior>
-                    <a className="block px-4 py-2 text-sm hover:bg-gray-200">
-                      Contact
-                    </a>
+                  <Link href="/contact" className="block px-4 py-2 text-sm hover:bg-gray-200">
+                    Contact
                   </Link>
                 </div>
               )}
             </div>
 
             {/* Blog Link */}
-            <Link href="/blog" legacyBehavior>
-              <a className="hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium">
-                Blog
-              </a>
-            </Link>
-
-            {/* Sign In/Sign Out */}
-            <Link href="/signin" legacyBehavior>
-              <a className="hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium">
-                Sign In
-              </a>
+            <Link href="/blog" className="hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">
+              Blog
             </Link>
           </div>
         </div>
