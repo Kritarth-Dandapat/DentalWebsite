@@ -102,32 +102,14 @@ export default function Navbar() {
               )}
             </div>
 
-            <div className="relative">
-              {/* About Dropdown */}
-              <button
-                onClick={() => toggleDropdown('about')}
-                className="hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
-              >
-                About
-              </button>
-              {openDropdown === 'about' && (
-                <div className="absolute left-0 mt-2 w-48 bg-white text-black shadow-lg rounded-md z-50 transition-opacity duration-300 ease-in-out opacity-100">
-                  <Link href="/about-us" className="block px-4 py-2 text-sm hover:bg-gray-200">
-                    About Us
-                  </Link>
-                  <Link href="/team" className="block px-4 py-2 text-sm hover:bg-gray-200">
-                    Team
-                  </Link>
-                  <Link href="/contact" className="block px-4 py-2 text-sm hover:bg-gray-200">
-                    Contact
-                  </Link>
-                </div>
-              )}
-            </div>
+            {/* Team Link */}
+            <Link href="/team" className="hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">
+              Team
+            </Link>
 
-            {/* Blog Link */}
-            <Link href="/blog" className="hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">
-              Blog
+            {/* Recent News Link */}
+            <Link href="/recent-news" className="hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">
+              Recent News
             </Link>
           </div>
         </div>
