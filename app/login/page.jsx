@@ -45,12 +45,14 @@ export default function AdminLogin() {
               required
             />
           </div>
+          <Link href="/dcp">
           <button
             type="submit"
             className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200"
-          >
+            >
             Login
           </button>
+            </Link>
         </form>
         <div className="text-center mt-4">
           <Link href="/" legacyBehavior>
