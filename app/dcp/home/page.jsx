@@ -144,10 +144,10 @@ const DoctorHomePage = () => {
           }
           main {
             flex: 1;
-            padding: 2rem;
+            padding: 1.5rem;
             display: grid;
-            gap: 1.5rem; /* Adjusted gap for vertical spacing */
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem; /* Reduced gap for compact layout */
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
           }
           section {
             margin: 0;
@@ -156,9 +156,8 @@ const DoctorHomePage = () => {
             background: white;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 1.5rem;
+            padding: 1rem;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            margin: 20px; /* Added margin for padding around the cards */
           }
           .card:hover {
             transform: translateY(-5px);
@@ -172,10 +171,11 @@ const DoctorHomePage = () => {
           }
           .carousel-slide {
             padding: 1rem;
+            text-align: center;
           }
           h1 {
             margin: 0;
-            font-size: 2rem;
+            font-size: 2.5rem;
           }
           h2 {
             margin-top: 0;
