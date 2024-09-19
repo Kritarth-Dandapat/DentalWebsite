@@ -41,7 +41,7 @@ export default function Footer() {
 
         {/* Footer Bottom */}
         <div className="text-sm text-gray-300">
-          <p>123 Dental Street, Smile City, CA 90210</p>
+          <p>123 Dental Street, University at Buffalo, NY 14260</p>
           <p>Email: <a href="mailto:contact@dentalapp.com" className="text-white hover:underline">contact@dentalapp.com</a> | Phone: (123) 456-7890</p>
           <p>&copy; {new Date().getFullYear()} DentalApp. All rights reserved.</p>
         </div>

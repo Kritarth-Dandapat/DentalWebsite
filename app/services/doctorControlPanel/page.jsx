@@ -97,7 +97,7 @@ export default function DoctorsControlPanel() {
                 Sign In
               </button>
             </Link>
-            <Link href="/signup">
+            <Link href="/login">
               <button className="bg-green-600 text-white py-2 px-4 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
                 Create Account
               </button>
