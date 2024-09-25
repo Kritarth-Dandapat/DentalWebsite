@@ -26,7 +26,7 @@ const PatientsPage = () => {
   return (
     <>
       <Head>
-        <title>Patients</title>
+        <title className='head'>Patients</title>
         <meta name="description" content="List of patients and their details." />
       </Head>
 
@@ -73,6 +73,10 @@ const PatientsPage = () => {
             min-height: 100vh;
             background: #f4f6f9;
             font-family: 'Arial', sans-serif;
+          }
+          .head{
+            color: #225ea8;
+            size: 2rem;
           }
           header {
             background: #225ea8;
