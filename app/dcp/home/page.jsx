@@ -1,13 +1,7 @@
 'use client'
-import React from 'react';
+import React, { useState } from 'react';
 import Head from 'next/head';
-import { Line } from 'react-chartjs-2';
-import Slider from 'react-slick';
-import 'chart.js/auto'; // Required for Chart.js
-import 'slick-carousel/slick/slick.css'; 
-import 'slick-carousel/slick/slick-theme.css';
 
-// Sample data
 const appointments = [
   { id: 1, patient: 'John Doe', time: '9:00 AM', status: 'Upcoming' },
   { id: 2, patient: 'Jane Smith', time: '10:00 AM', status: 'Completed' },
@@ -22,110 +16,138 @@ const reports = [
   { id: 4, patient: 'Michael Brown', date: '2024-09-08', status: 'Pending' },
 ];
 
-const data = {
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
-  datasets: [
-    {
-      label: 'Appointments',
-      data: [30, 45, 50, 40, 60, 70, 90],
-      fill: false,
-      backgroundColor: '#225ea8',
-      borderColor: '#225ea8',
-      tension: 0.1,
-    },
-  ],
-};
-
 const carouselItems = [
   { id: 1, title: 'New Feature Release', description: 'Check out the new features in the app!' },
   { id: 2, title: 'Appointment Scheduling Tips', description: 'Learn how to manage your appointments more effectively.' },
   { id: 3, title: 'Patient Feedback Highlights', description: 'Read some recent feedback from patients.' },
 ];
 
+
+// Modal component
+const Modal = ({ title, content, onClose }) => (
+  <div className="modal-overlay">
+    <div className="modal">
+      <button className="close-button" onClick={onClose}>
+        &times;
+      </button>
+      <h2>{title}</h2>
+      <div>{content}</div>
+    </div>
+    <style jsx>{`
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+      .modal {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        position: relative;
+        width: 80%;
+        max-width: 600px;
+      }
+      .close-button {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        border: none;
+        background: transparent;
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+    `}</style>
+  </div>
+);
+
 const DoctorHomePage = () => {
-  const carouselSettings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 5000,
+  const [modalData, setModalData] = useState(null);
+
+  const handleOpenModal = (type) => {
+    const content = {
+      appointments: (
+        <ul>
+          {appointments.map((appointment) => (
+            <li key={appointment.id}>
+              <strong>{appointment.patient}</strong> at {appointment.time} - {appointment.status}
+            </li>
+          ))}
+        </ul>
+      ),
+      patients: (
+        <ul>
+          {reports.map((report) => (
+            <li key={report.id}>
+              <strong>{report.patient}</strong> - {report.date} ({report.status})
+            </li>
+          ))}
+        </ul>
+      ),
+      notifications: <p>You have {5} new notifications!</p>,
+    };
+    setModalData({ title: type.charAt(0).toUpperCase() + type.slice(1), content: content[type] });
+  };
+
+  const handleCloseModal = () => {
+    setModalData(null);
   };
 
   return (
     <>
       <Head>
-        <title>Dashboard</title>
-        <meta name="description" content="Doctor's control panel for managing patients, appointments, and more." />
+        <title>Doctor Home</title>
+        <meta name="description" content="Home page for the doctor." />
       </Head>
 
       <div className="container">
         <header>
-          <h1>Doctor's Dashboard</h1>
+          <h1>Welcome, Dr. Smith!</h1>
         </header>
 
         <main>
-          <section className="overview">
-            <div className="card card-appointments">
-              <h2>Today's Appointments</h2>
+          <section className="dashboard">
+            <div className="card">
+              <h2>Dashboard</h2>
+              <p>Overview of your patients, appointments, and notifications.</p>
+              <div className="stats">
+                <div className="stat-item" onClick={() => handleOpenModal('patients')}>
+                  <h3>Patients</h3>
+                  <p>150</p>
+                </div>
+                <div className="stat-item" onClick={() => handleOpenModal('appointments')}>
+                  <h3>Appointments</h3>
+                  <p>30 Today</p>
+                </div>
+                <div className="stat-item" onClick={() => handleOpenModal('notifications')}>
+                  <h3>Notifications</h3>
+                  <p>5 New</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="recent-activity">
+            <div className="card">
+              <h2>Recent Activity</h2>
               <ul>
-                {appointments.map((appointment) => (
-                  <li key={appointment.id} className={`status-${appointment.status.toLowerCase()}`}>
-                    <strong>{appointment.patient}</strong> - {appointment.time} ({appointment.status})
-                  </li>
-                ))}
+                <li>Patient John Doe visited on September 20</li>
+                <li>Patient Jane Smith updated their profile</li>
+                <li>Appointment with Mary Johnson scheduled for September 28</li>
               </ul>
-            </div>
-
-            <div className="card chart-card">
-              <h2>Appointment Trends</h2>
-              <Line data={data} />
-            </div>
-          </section>
-
-          <section className="carousel-section">
-            <div className="card">
-              <h2>Latest Updates</h2>
-              <Slider {...carouselSettings}>
-                {carouselItems.map((item) => (
-                  <div key={item.id} className="carousel-slide">
-                    <h3>{item.title}</h3>
-                    <p>{item.description}</p>
-                  </div>
-                ))}
-              </Slider>
-            </div>
-          </section>
-
-          <section className="patient-management">
-            <div className="card">
-              <h2>Patient Management</h2>
-              <p><a href="/doctor/patients">View Patient List</a></p>
-              <p><a href="/doctor/patients/new">Register New Patient</a></p>
-            </div>
-          </section>
-
-          <section className="reports">
-            <div className="card">
-              <h2>Recent Reports</h2>
-              <ul>
-                {reports.map((report) => (
-                  <li key={report.id}>
-                    <strong>{report.patient}</strong> - {report.date} ({report.status})
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </section>
-
-          <section className="notifications">
-            <div className="card">
-              <h2>Notifications</h2>
-              <p>No new notifications.</p>
             </div>
           </section>
         </main>
+
+        {/* Modal Display */}
+        {modalData && <Modal title={modalData.title} content={modalData.content} onClose={handleCloseModal} />}
 
         <style jsx>{`
           .container {
@@ -134,82 +156,112 @@ const DoctorHomePage = () => {
             min-height: 100vh;
             background: #f4f6f9;
             font-family: 'Arial', sans-serif;
-          }
-          header {
-            background: #225ea8;
-            color: white;
+            transition: background 0.3s ease;
             padding: 1rem;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
           }
+
+          header {
+            background: linear-gradient(90deg, #0072ff, #00c6ff);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-radius: 0 0 20px 20px;
+            transition: background 0.3s ease;
+          }
+
           main {
             flex: 1;
-            padding: 1.5rem;
-            display: grid;
-            gap: 1rem; /* Reduced gap for compact layout */
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
           }
-          section {
-            margin: 0;
+
+          .dashboard, .recent-activity {
+            display: flex;
+            justify-content: center;
           }
+
           .card {
             background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 1rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-          }
-          .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-          }
-          .chart-card {
-            height: 300px;
-          }
-          .carousel-section {
-            grid-column: span 2; /* Make carousel span multiple columns */
-          }
-          .carousel-slide {
-            padding: 1rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            max-width: 100%;
+            width: 100%;
+            transition: box-shadow 0.3s ease;
             text-align: center;
           }
+
+          .card:hover {
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+          }
+
           h1 {
             margin: 0;
             font-size: 2.5rem;
           }
+
           h2 {
             margin-top: 0;
-            font-size: 1.5rem;
+            font-size: 1.75rem;
+            color: #0072ff;
+            font-weight: 600;
+          }
+
+          h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
             color: #333;
           }
-          h3 {
-            font-size: 1.2rem;
-            color: #225ea8;
+
+          .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 1rem;
           }
-          ul {
-            list-style: none;
-            padding: 0;
+
+          .stat-item {
+            background: #f0f0f0;
+            padding: 1rem;
+            border-radius: 10px;
+            width: 30%;
+            text-align: center;
+            cursor: pointer; /* Change cursor on hover */
+            transition: transform 0.2s;
           }
-          li {
-            border-bottom: 1px solid #eee;
-            padding: 0.5rem 0;
+
+          .stat-item:hover {
+            transform: scale(1.05);
           }
-          .status-upcoming {
-            color: #009688;
+
+          /* Media queries for responsive design */
+          @media (min-width: 768px) {
+            .card {
+              max-width: 600px;
+            }
           }
-          .status-completed {
-            color: #4caf50;
+
+          @media (min-width: 1024px) {
+            .card {
+              max-width: 900px;
+            }
           }
-          .status-cancelled {
-            color: #f44336;
-          }
-          a {
-            color: #225ea8;
-            text-decoration: none;
-            font-weight: bold;
-          }
-          a:hover {
-            text-decoration: underline;
+
+          @media (max-width: 767px) {
+            .card {
+              max-width: 90%;
+              padding: 1rem;
+            }
+
+            header {
+              padding: 1rem;
+            }
+
+            main {
+              padding: 1rem;
+            }
           }
         `}</style>
       </div>

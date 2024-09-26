@@ -3,6 +3,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Navbar() {
   const [openDropdown, setOpenDropdown] = useState(null);
@@ -42,10 +43,12 @@ export default function Navbar() {
           {/* Logo and App Name */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
-              <img
-                src="/logo.png"
+              <Image
+                src="/icon/logo.jpg"
                 alt="DentalApp Logo"
                 className="h-8 w-8 mr-2"
+                width={8}
+                height={8}
               />
               <span className="text-2xl font-bold">DentalApp</span>
             </Link>
