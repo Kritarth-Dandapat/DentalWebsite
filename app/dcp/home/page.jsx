@@ -1,27 +1,8 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
-
-const appointments = [
-  { id: 1, patient: 'John Doe', time: '9:00 AM', status: 'Upcoming' },
-  { id: 2, patient: 'Jane Smith', time: '10:00 AM', status: 'Completed' },
-  { id: 3, patient: 'Emily Johnson', time: '11:00 AM', status: 'Upcoming' },
-  { id: 4, patient: 'Michael Brown', time: '1:00 PM', status: 'Cancelled' },
-];
-
-const reports = [
-  { id: 1, patient: 'John Doe', date: '2024-09-05', status: 'Processed' },
-  { id: 2, patient: 'Jane Smith', date: '2024-09-06', status: 'Pending' },
-  { id: 3, patient: 'Emily Johnson', date: '2024-09-07', status: 'Processed' },
-  { id: 4, patient: 'Michael Brown', date: '2024-09-08', status: 'Pending' },
-];
-
-const carouselItems = [
-  { id: 1, title: 'New Feature Release', description: 'Check out the new features in the app!' },
-  { id: 2, title: 'Appointment Scheduling Tips', description: 'Learn how to manage your appointments more effectively.' },
-  { id: 3, title: 'Patient Feedback Highlights', description: 'Read some recent feedback from patients.' },
-];
-
+import { Line, Pie } from 'react-chartjs-2'; // Using charts
+import Chart from 'chart.js/auto';
 
 // Modal component
 const Modal = ({ title, content, onClose }) => (
@@ -54,6 +35,11 @@ const Modal = ({ title, content, onClose }) => (
         position: relative;
         width: 80%;
         max-width: 600px;
+        animation: fadeIn 0.5s;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
       }
       .close-button {
         position: absolute;
@@ -70,6 +56,21 @@ const Modal = ({ title, content, onClose }) => (
 
 const DoctorHomePage = () => {
   const [modalData, setModalData] = useState(null);
+
+  // Appointment and report data
+  const appointments = [
+    { id: 1, patient: 'John Doe', time: '9:00 AM', status: 'Upcoming' },
+    { id: 2, patient: 'Jane Smith', time: '10:00 AM', status: 'Completed' },
+    { id: 3, patient: 'Emily Johnson', time: '11:00 AM', status: 'Upcoming' },
+    { id: 4, patient: 'Michael Brown', time: '1:00 PM', status: 'Cancelled' },
+  ];
+
+  const reports = [
+    { id: 1, patient: 'John Doe', date: '2024-09-05', status: 'Processed' },
+    { id: 2, patient: 'Jane Smith', date: '2024-09-06', status: 'Pending' },
+    { id: 3, patient: 'Emily Johnson', date: '2024-09-07', status: 'Processed' },
+    { id: 4, patient: 'Michael Brown', date: '2024-09-08', status: 'Pending' },
+  ];
 
   const handleOpenModal = (type) => {
     const content = {
@@ -99,6 +100,42 @@ const DoctorHomePage = () => {
   const handleCloseModal = () => {
     setModalData(null);
   };
+
+  // Line chart data
+  const lineData = {
+    labels: ['January', 'February', 'March', 'April', 'May'],
+    datasets: [
+      {
+        label: 'Appointments Over Time',
+        data: [65, 59, 80, 81, 56],
+        fill: false,
+        backgroundColor: '#0072ff',
+        borderColor: '#0072ff',
+        tension: 0.4,
+      },
+    ],
+  };
+
+  // Pie chart data
+  const pieData = {
+    labels: ['Processed', 'Pending', 'Cancelled'],
+    datasets: [
+      {
+        label: 'Reports',
+        data: [3, 2, 1],
+        backgroundColor: ['#00c6ff', '#ff4b5c', '#ffcf00'],
+        borderColor: ['#0072ff', '#ff4b5c', '#ffcf00'],
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  useEffect(() => {
+    // Adding simple animations on page load
+    document.querySelectorAll('.stat-item').forEach((item, i) => {
+      item.style.animationDelay = `${i * 0.1}s`;
+    });
+  }, []);
 
   return (
     <>
@@ -131,6 +168,26 @@ const DoctorHomePage = () => {
                   <p>5 New</p>
                 </div>
               </div>
+            </div>
+          </section>
+
+          <section className="charts">
+            <div className="chart-card">
+              <h2>Appointments Trend</h2>
+              <Line data={lineData} />
+            </div>
+
+            <div className="chart-card">
+              <h2>Report Status</h2>
+              <Pie data={pieData} />
+            </div>
+
+            <div className="chart-card">
+              <h2>Polygon Chart (Placeholder)</h2>
+              {/* Example of a polygon chart */}
+              <svg width="300" height="300" viewBox="0 0 100 100" style={{ transform: 'rotate(30deg)' }}>
+                <polygon points="50,1 90,20 82,65 50,99 18,65 10,20" fill="#00c6ff" stroke="#0072ff" strokeWidth="1" />
+              </svg>
             </div>
           </section>
 
@@ -191,76 +248,70 @@ const DoctorHomePage = () => {
             max-width: 100%;
             width: 100%;
             transition: box-shadow 0.3s ease;
-            text-align: center;
-          }
-
-          .card:hover {
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-          }
-
-          h1 {
-            margin: 0;
-            font-size: 2.5rem;
-          }
-
-          h2 {
-            margin-top: 0;
-            font-size: 1.75rem;
-            color: #0072ff;
-            font-weight: 600;
-          }
-
-          h3 {
-            font-size: 1.25rem;
-            margin-bottom: 0.5rem;
-            color: #333;
           }
 
           .stats {
             display: flex;
             justify-content: space-around;
             margin-top: 1rem;
+            gap: 2rem;
           }
 
           .stat-item {
-            background: #f0f0f0;
-            padding: 1rem;
+            background: linear-gradient(90deg, #0072ff, #00c6ff);
+            color: white;
+            padding: 1.5rem;
             border-radius: 10px;
-            width: 30%;
             text-align: center;
-            cursor: pointer; /* Change cursor on hover */
-            transition: transform 0.2s;
+            width: 150px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            animation: fadeInUp 0.7s forwards;
           }
 
           .stat-item:hover {
-            transform: scale(1.05);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
           }
 
-          /* Media queries for responsive design */
-          @media (min-width: 768px) {
-            .card {
-              max-width: 600px;
-            }
+          .charts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
           }
 
-          @media (min-width: 1024px) {
-            .card {
-              max-width: 900px;
-            }
+          .chart-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            font-size: 1rem;
           }
 
-          @media (max-width: 767px) {
-            .card {
-              max-width: 90%;
-              padding: 1rem;
-            }
+          h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: white;
+          }
 
-            header {
-              padding: 1rem;
-            }
+          h2 {
+            font-size: 1.75rem;
+          }
 
-            main {
-              padding: 1rem;
+          p, li {
+            font-size: 1.2rem;
+          }
+
+          @keyframes fadeInUp {
+            0% {
+              opacity: 0;
+              transform: translateY(20px);
+            }
+            100% {
+              opacity: 1;
+              transform: translateY(0);
             }
           }
         `}</style>
