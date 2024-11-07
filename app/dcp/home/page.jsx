@@ -4,6 +4,85 @@ import Head from 'next/head';
 import { Line, Pie } from 'react-chartjs-2'; // Using charts
 import Chart from 'chart.js/auto';
 
+
+const TodoList = () => {
+  const [todos, setTodos] = useState([]);
+  const [newTodo, setNewTodo] = useState('');
+
+  const handleAddTodo = () => {
+    if (newTodo.trim()) {
+      setTodos([...todos, { text: newTodo, completed: false }]);
+      setNewTodo('');
+    }
+  };
+
+  const handleToggleTodo = (index) => {
+    const updatedTodos = todos.map((todo, i) =>
+      i === index ? { ...todo, completed: !todo.completed } : todo
+    );
+    setTodos(updatedTodos);
+  };
+
+  const handleDeleteTodo = (index) => {
+    const updatedTodos = todos.filter((_, i) => i !== index);
+    setTodos(updatedTodos);
+  };
+
+  return (
+    <div>
+      <input
+        type="text"
+        value={newTodo}
+        onChange={(e) => setNewTodo(e.target.value)}
+        placeholder="Add a new task"
+      />
+      <button onClick={handleAddTodo}>Add</button>
+      <ul>
+        {todos.map((todo, index) => (
+          <li key={index} className={todo.completed ? 'completed' : ''}>
+            <span onClick={() => handleToggleTodo(index)}>{todo.text}</span>
+            <button onClick={() => handleDeleteTodo(index)}>Delete</button>
+          </li>
+        ))}
+      </ul>
+      <style jsx>{`
+        input {
+          padding: 0.5rem;
+          margin-right: 0.5rem;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+        }
+        button {
+          padding: 0.5rem 1rem;
+          border: none;
+          background: #0072ff;
+          color: white;
+          border-radius: 5px;
+          cursor: pointer;
+        }
+        ul {
+          list-style: none;
+          padding: 0;
+        }
+        li {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0.5rem 0;
+          border-bottom: 1px solid #ccc;
+        }
+        li.completed span {
+          text-decoration: line-through;
+          color: #888;
+        }
+        li span {
+          cursor: pointer;
+        }
+      `}</style>
+    </div>
+  );
+};
+
 // Modal component
 const Modal = ({ title, content, onClose }) => (
   <div className="modal-overlay">
@@ -201,7 +280,17 @@ const DoctorHomePage = () => {
               </ul>
             </div>
           </section>
-        </main>
+
+          <section className="todo-list">
+            <div className="card">
+              <h2>To-Do List</h2>
+              <TodoList />
+            </div>
+          </section>
+
+          
+          
+          </main>
 
         {/* Modal Display */}
         {modalData && <Modal title={modalData.title} content={modalData.content} onClose={handleCloseModal} />}

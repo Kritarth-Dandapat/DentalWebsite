@@ -10,7 +10,7 @@ const patientData = {
   age: 35,
   gender: 'Male',
   bloodType: 'O+',
-  photoUrl: '/path/to/photo.jpg',  // Placeholder for the patient's photo
+  photoUrl: '/path/to/photo.jpg',
   vitals: {
     heartRate: '72 bpm',
     bloodPressure: '120/80 mmHg',
@@ -60,7 +60,7 @@ const patientData = {
         platelets: '250,000 /µL',
         notes: 'Normal range',
       },
-      image: '/path/to/blood-test-report.jpg', // Placeholder for the report image
+      image: '/path/to/blood-test-report.jpg',
     },
     {
       id: 2,
@@ -71,9 +71,8 @@ const patientData = {
         findings: 'No fractures detected',
         notes: 'Chest X-Ray',
       },
-      image: '/path/to/x-ray-report.jpg', // Placeholder for the report image
+      image: '/path/to/x-ray-report.jpg',
     },
-    // More reports...
   ],
 };
 
@@ -96,7 +95,7 @@ const dentalIssuesChartData = {
   datasets: [
     {
       label: 'Dental Issues',
-      data: [40, 25, 15, 10, 10], // Example data for dental issues
+      data: [40, 25, 15, 10, 10],
       backgroundColor: ['#ff6384', '#36a2eb', '#ffce56', '#ff9f40', '#4bc0c0'],
     },
   ],
@@ -138,19 +137,19 @@ const PatientDetailPage = () => {
 
         <main>
           <section className="left-section">
-            <div className="card">
+            <div className="card patient-info-card">
               <img src={patientData.photoUrl} alt={`${patientData.name}'s photo`} className="patient-photo" />
-              <p className="patient-info"><strong>Age:</strong> {patientData.age}</p>
-              <p className="patient-info"><strong>Gender:</strong> {patientData.gender}</p>
-              <p className="patient-info"><strong>Blood Type:</strong> {patientData.bloodType}</p>
+              <p><strong>Age:</strong> {patientData.age}</p>
+              <p><strong>Gender:</strong> {patientData.gender}</p>
+              <p><strong>Blood Type:</strong> {patientData.bloodType}</p>
             </div>
 
-            <div className="card">
+            <div className="card chart-card">
               <h2 className="chart-title">Vitals</h2>
               <Bar data={vitalData} options={{ responsive: true }} />
             </div>
 
-            <div className="card">
+            <div className="card chart-card">
               <h2 className="chart-title">Dental Issues</h2>
               <Pie data={dentalIssuesChartData} options={{ responsive: true }} />
             </div>
@@ -177,14 +176,13 @@ const PatientDetailPage = () => {
               </ul>
             </div>
 
-            <div className="card">
+            <div className="card chart-card">
               <h2 className="chart-title">Appointment Trends</h2>
-              <Line data={appointmentChartData} />
+              <Line data={appointmentChartData} options={{ responsive: true }} />
             </div>
           </section>
         </main>
 
-        {/* Modal for Report Details */}
         {selectedReport && (
           <div className="modal">
             <div className="modal-content">
@@ -205,16 +203,16 @@ const PatientDetailPage = () => {
             min-height: 100vh;
             background: #f4f6f9;
             padding: 1rem;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Roboto', sans-serif;
           }
 
           header {
-            background: linear-gradient(90deg, #0072ff, #00c6ff);
+            background: linear-gradient(90deg, #225ea8, #4a90e2);
             color: white;
             padding: 2rem;
             text-align: center;
             border-radius: 0 0 20px 20px;
-            font-size: 2rem;  /* Increased font size */
+            font-size: 2.5rem;
           }
 
           main {
@@ -233,41 +231,56 @@ const PatientDetailPage = () => {
 
           .card {
             background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transition: box-shadow 0.3s ease;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
           }
 
           .card:hover {
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+          }
+
+          .chart-card {
+            flex: 1;
+          }
+
+          .patient-info-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
           }
 
           .patient-photo {
-            width: 100%;
-            border-radius: 15px;
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
             margin-bottom: 1rem;
-          }
-
-          .patient-info {
-            font-size: 1.3rem;  /* Increased font size */
-            margin: 0.5rem 0;
           }
 
           .chart-title {
-            font-size: 1.5rem;  /* Increased font size */
+            font-size: 1.5rem;
             margin-bottom: 1rem;
-            color: #0072ff;
+            color: #225ea8;
+          }
+
+          .reports-section ul {
+            list-style: none;
+            padding: 0;
           }
 
           .report-item {
             cursor: pointer;
-            color: #0072ff;
-            font-size: 1.3rem;  /* Increased font size */
+            padding: 0.5rem;
+            border-bottom: 1px solid #eaeaea;
+            transition: background 0.2s;
           }
 
           .report-item:hover {
-            text-decoration: underline;
+            background: #f0f8ff;
           }
 
           .modal {
@@ -276,20 +289,21 @@ const PatientDetailPage = () => {
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.7);
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             z-index: 1000;
           }
 
           .modal-content {
             background: white;
-            padding: 2rem;
             border-radius: 10px;
+            padding: 2rem;
             position: relative;
-            max-width: 500px;
-            width: 100%;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
           }
 
           .close-button {
@@ -298,13 +312,14 @@ const PatientDetailPage = () => {
             right: 10px;
             background: none;
             border: none;
-            font-size: 20px;
+            font-size: 1.5rem;
             cursor: pointer;
           }
 
           .report-image {
             width: 100%;
             border-radius: 10px;
+            margin-top: 1rem;
           }
         `}</style>
       </div>
