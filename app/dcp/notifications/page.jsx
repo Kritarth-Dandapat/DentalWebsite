@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import React, { useState } from 'react';
 import Head from 'next/head';
 
@@ -11,12 +11,26 @@ const initialNotifications = [
 
 const NotificationsPage = () => {
   const [notifications, setNotifications] = useState(initialNotifications);
+  const [filter, setFilter] = useState('all'); // For filtering
+  const [sort, setSort] = useState('date'); // For sorting
 
   const handleMarkAsRead = (id) => {
     setNotifications(notifications.map(notification => 
       notification.id === id ? { ...notification, read: true } : notification
     ));
   };
+
+  const filteredNotifications = notifications.filter(notification => {
+    if (filter === 'unread') return !notification.read;
+    return true; // Show all for 'all'
+  });
+
+  const sortedNotifications = [...filteredNotifications].sort((a, b) => {
+    if (sort === 'date') {
+      return new Date(b.date) - new Date(a.date); // Sort by date descending
+    }
+    return a.title.localeCompare(b.title); // Sort by title ascending
+  });
 
   return (
     <>
@@ -34,12 +48,26 @@ const NotificationsPage = () => {
           <section className="notification-list">
             <div className="card">
               <h2>Notification List</h2>
+              <div className="controls">
+                <select onChange={(e) => setFilter(e.target.value)}>
+                  <option value="all">All Notifications</option>
+                  <option value="unread">Unread Notifications</option>
+                </select>
+                <select onChange={(e) => setSort(e.target.value)}>
+                  <option value="date">Sort by Date</option>
+                  <option value="title">Sort by Title</option>
+                </select>
+              </div>
               <ul>
-                {notifications.map((notification) => (
+                {sortedNotifications.map((notification) => (
                   <li key={notification.id} className={notification.read ? 'read' : ''}>
                     <strong>{notification.title}</strong> - {notification.date}
                     <p>{notification.message}</p>
-                    {!notification.read && <button onClick={() => handleMarkAsRead(notification.id)} className="mark-read-btn">Mark as Read</button>}
+                    {!notification.read && (
+                      <button onClick={() => handleMarkAsRead(notification.id)} className="mark-read-btn">
+                        Mark as Read
+                      </button>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -56,11 +84,12 @@ const NotificationsPage = () => {
             font-family: 'Arial', sans-serif;
           }
           header {
-            background: #225ea8;
+            background: linear-gradient(90deg, #0072ff, #00c6ff);
             color: white;
-            padding: 1rem;
+            padding: 2rem;
             text-align: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-radius: 0 0 20px 20px;
           }
           main {
             flex: 1;
@@ -68,7 +97,7 @@ const NotificationsPage = () => {
           }
           .card {
             background: white;
-            border-radius: 8px;
+            border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 1.5rem;
             margin: 20px; /* Padding around the card */
@@ -81,6 +110,15 @@ const NotificationsPage = () => {
             margin-top: 0;
             font-size: 1.5rem;
             color: #333;
+          }
+          .controls {
+            margin: 1rem 0;
+          }
+          .controls select {
+            margin-right: 1rem;
+            padding: 0.5rem;
+            border-radius: 4px;
+            border: 1px solid #ccc;
           }
           ul {
             list-style: none;
@@ -95,7 +133,7 @@ const NotificationsPage = () => {
             background: #e0f7fa;
           }
           .mark-read-btn {
-            background: #4caf50;
+            background: #0072ff;
             color: white;
             border: none;
             padding: 0.5rem 1rem;
@@ -107,7 +145,7 @@ const NotificationsPage = () => {
             transform: translateY(-50%);
           }
           .mark-read-btn:hover {
-            background: #388e3c;
+            background: #005bb5;
           }
         `}</style>
       </div>

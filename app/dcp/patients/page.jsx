@@ -1,70 +1,180 @@
-'use client'
+'use client';
 import React, { useState } from 'react';
 import Head from 'next/head';
 
-const initialPatients = [
-  { id: 1, name: 'John Doe', lastVisit: '2024-08-30', status: 'Active', details: 'No issues reported.' },
-  { id: 2, name: 'Jane Smith', lastVisit: '2024-08-25', status: 'Inactive', details: 'Needs follow-up.' },
-  { id: 3, name: 'Emily Johnson', lastVisit: '2024-08-20', status: 'Active', details: 'Scheduled for check-up.' },
-  { id: 4, name: 'Michael Brown', lastVisit: '2024-08-15', status: 'Inactive', details: 'Missed last appointment.' },
-  // Add more dummy data here
-];
+// Modal component
+const Modal = ({ title, content, onClose }) => (
+  <div className="modal-overlay">
+    <div className="modal">
+      <button className="close-button" onClick={onClose}>
+        &times;
+      </button>
+      <h2>{title}</h2>
+      <div>{content}</div>
+    </div>
+    <style jsx>{`
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+      .modal {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        position: relative;
+        width: 80%;
+        max-width: 600px;
+        animation: fadeIn 0.5s;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
+      }
+      .close-button {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        border: none;
+        background: transparent;
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+    `}</style>
+  </div>
+);
 
 const PatientsPage = () => {
-  const [patients, setPatients] = useState(initialPatients);
-  const [selectedPatient, setSelectedPatient] = useState(null);
+  const [modalData, setModalData] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [patients, setPatients] = useState([
+    { id: 1, name: 'John Doe', age: 30, email: 'johndoe@example.com' },
+    { id: 2, name: 'Jane Smith', age: 25, email: 'janesmith@example.com' },
+    { id: 3, name: 'Emily Johnson', age: 35, email: 'emilyj@example.com' },
+    { id: 4, name: 'Michael Brown', age: 40, email: 'michaelb@example.com' },
+  ]);
+  const [newPatient, setNewPatient] = useState({ name: '', age: '', email: '' });
 
-  const handleAddPatient = () => {
-    // Logic to add a new patient
-    alert('Add Patient feature is not implemented yet.');
+  const handleOpenModal = (patient) => {
+    const content = (
+      <div>
+        <p><strong>Age:</strong> {patient.age}</p>
+        <p><strong>Email:</strong> {patient.email}</p>
+      </div>
+    );
+    setModalData({ title: `Details for ${patient.name}`, content });
   };
 
-  const handleViewPatient = (patient) => {
-    setSelectedPatient(patient);
+  const handleCloseModal = () => {
+    setModalData(null);
   };
+
+  const handleAddPatient = (e) => {
+    e.preventDefault();
+    if (newPatient.name && newPatient.age && newPatient.email) {
+      setPatients([
+        ...patients,
+        { id: patients.length + 1, ...newPatient },
+      ]);
+      setNewPatient({ name: '', age: '', email: '' });
+    }
+  };
+
+  const filteredPatients = patients.filter((patient) =>
+    patient.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <>
       <Head>
-        <title className='head'>Patients</title>
-        <meta name="description" content="List of patients and their details." />
+        <title>Patients Page</title>
+        <meta name="description" content="List of patients." />
       </Head>
 
       <div className="container">
         <header>
-          <h1>Patients</h1>
+          <h1>Patients List</h1>
         </header>
 
         <main>
-          <section className="patient-management">
+          <section className="search-section">
+            <input
+              type="text"
+              placeholder="Search by name..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </section>
+
+          <section className="patient-list">
             <div className="card">
-              <div className="card-header">
-                <h2>Patient List</h2>
-                <button onClick={handleAddPatient} className="add-btn">Add New Patient</button>
-              </div>
-              <ul>
-                {patients.map((patient) => (
-                  <li key={patient.id} onClick={() => handleViewPatient(patient)} className="patient-item">
-                    <strong>{patient.name}</strong> - Last Visit: {patient.lastVisit} ({patient.status})
-                  </li>
-                ))}
-              </ul>
+              <h2>All Patients</h2>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredPatients.map((patient) => (
+                    <tr key={patient.id}>
+                      <td>{patient.name}</td>
+                      <td>{patient.age}</td>
+                      <td>{patient.email}</td>
+                      <td>
+                        <button className="info-button" onClick={() => handleOpenModal(patient)}>
+                          Info
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </section>
 
-          {selectedPatient && (
-            <section className="patient-details">
-              <div className="card">
-                <h2>Patient Details</h2>
-                <p><strong>Name:</strong> {selectedPatient.name}</p>
-                <p><strong>Last Visit:</strong> {selectedPatient.lastVisit}</p>
-                <p><strong>Status:</strong> {selectedPatient.status}</p>
-                <p><strong>Details:</strong> {selectedPatient.details}</p>
-                <button onClick={() => setSelectedPatient(null)} className="close-btn">Close</button>
-              </div>
-            </section>
-          )}
+          <section className="add-patient-section">
+            <h2>Add New Patient</h2>
+            <form onSubmit={handleAddPatient}>
+              <input
+                type="text"
+                placeholder="Name"
+                value={newPatient.name}
+                onChange={(e) => setNewPatient({ ...newPatient, name: e.target.value })}
+                required
+              />
+              <input
+                type="number"
+                placeholder="Age"
+                value={newPatient.age}
+                onChange={(e) => setNewPatient({ ...newPatient, age: e.target.value })}
+                required
+              />
+              <input
+                type="email"
+                placeholder="Email"
+                value={newPatient.email}
+                onChange={(e) => setNewPatient({ ...newPatient, email: e.target.value })}
+                required
+              />
+              <button type="submit">Add Patient</button>
+            </form>
+          </section>
         </main>
+
+        {/* Modal Display */}
+        {modalData && <Modal title={modalData.title} content={modalData.content} onClose={handleCloseModal} />}
 
         <style jsx>{`
           .container {
@@ -73,76 +183,121 @@ const PatientsPage = () => {
             min-height: 100vh;
             background: #f4f6f9;
             font-family: 'Arial', sans-serif;
-          }
-          .head{
-            color: #225ea8;
-            size: 2rem;
-          }
-          header {
-            background: #225ea8;
-            color: white;
+            transition: background 0.3s ease;
             padding: 1rem;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
           }
+
+          header {
+            background: linear-gradient(90deg, #0072ff, #00c6ff);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-radius: 0 0 20px 20px;
+            transition: background 0.3s ease;
+            font-size: 2rem;
+          }
+
           main {
             flex: 1;
             padding: 2rem;
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 2rem;
           }
+
+          .search-section {
+            margin-bottom: 1rem;
+          }
+
+          .search-section input {
+            padding: 0.5rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 100%;
+            max-width: 400px;
+          }
+
+          .patient-list {
+            display: flex;
+            flex-direction: column;
+          }
+
           .card {
             background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
             padding: 1.5rem;
-            margin: 20px; /* Padding around the card */
-            position: relative;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
           }
-          .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+
+          .card:hover {
+            transform: translateY(-5px);
           }
-          .add-btn, .close-btn {
-            background: #225ea8;
+
+          h2 {
+            color: #225ea8;
+          }
+
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+          }
+
+          th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+          }
+
+          th {
+            background-color: #f4f6f9;
+            color: #225ea8;
+          }
+
+          .info-button {
+            background: #0072ff;
             color: white;
             border: none;
+            border-radius: 8px;
             padding: 0.5rem 1rem;
-            border-radius: 4px;
             cursor: pointer;
+            transition: background 0.3s ease;
           }
-          .add-btn:hover, .close-btn:hover {
-            background: #1a4a7b;
+
+          .info-button:hover {
+            background: #005bb5;
           }
-          ul {
-            list-style: none;
-            padding: 0;
+
+          .add-patient-section {
+            margin-top: 2rem;
           }
-          li {
-            border-bottom: 1px solid #eee;
-            padding: 0.5rem 0;
-            cursor: pointer;
-          }
-          .patient-item:hover {
-            background: #f0f0f0;
-          }
-          .patient-details {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
+
+          .add-patient-section form {
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: column;
+            gap: 1rem;
           }
-          .patient-details .card {
-            width: 80%;
-            max-width: 500px;
-            margin: 0;
+
+          .add-patient-section input {
+            padding: 0.5rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+          }
+
+          .add-patient-section button {
+            background: #0072ff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+          }
+
+          .add-patient-section button:hover {
+            background: #005bb5;
           }
         `}</style>
       </div>

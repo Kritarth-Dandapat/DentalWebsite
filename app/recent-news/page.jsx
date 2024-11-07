@@ -81,22 +81,36 @@ const newsItems = [
 export default function News() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-4xl font-bold text-center mb-12">Recent News</h1>
-      <div className="space-y-8">
+      <h1 className="text-4xl font-bold text-center mb-12 text-blue-900">
+        Recent News
+      </h1>
+      <div className="space-y-12">
         {newsItems.map((item, index) => (
-          <div key={index} className="flex flex-col md:flex-row items-center bg-white shadow-lg rounded-lg overflow-hidden">
-            <div className="w-full md:w-1/3 h-48 md:h-64 relative">
+          <div
+            key={index}
+            className="group flex flex-col md:flex-row items-center bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 ease-in-out"
+          >
+            {/* Image Section */}
+            <div className="w-full md:w-1/3 h-64 relative">
               <Image
                 src={item.imageUrl}
                 alt={item.title}
                 layout="fill"
                 objectFit="cover"
+                className="group-hover:scale-105 transition-transform duration-500"
               />
             </div>
-            <div className="w-full md:w-2/3 p-6">
-              <h2 className="text-2xl font-bold mb-2">{item.title}</h2>
-              <p className="text-gray-600 text-sm mb-4">{item.date}</p>
+
+            {/* Content Section */}
+            <div className="w-full md:w-2/3 p-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-blue-900 transition-colors duration-300">
+                {item.title}
+              </h2>
+              <p className="text-gray-500 text-sm mb-4">{item.date}</p>
               <p className="text-gray-700">{item.description}</p>
+              <button className="mt-4 text-blue-600 font-semibold hover:underline">
+                Read more
+              </button>
             </div>
           </div>
         ))}
