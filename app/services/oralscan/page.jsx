@@ -1,174 +1,134 @@
 "use client";
-import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { useState } from "react";
 
-const fullWidthImages = [
-  '/oral-scan/full-width1.png',
-  '/oral-scan/full-width2.png',
-  '/oral-scan/full-width3.png',
-];
+export default function OralScanWebpage() {
+  const [faqOpen, setFaqOpen] = useState(Array(5).fill(false));
 
-const featureImages = [
-  {
-    feature: 'Instant Oral Health Assessment',
-    images: ['/oral-scan/Intra Oral Scan Dummy.png'],
-  },
-  {
-    feature: 'AI-Powered Analysis',
-    images: [
-      '/oral-scan/feature2-1.png',
-      '/oral-scan/feature2-2.png',
-      '/oral-scan/feature2-3.png',
-    ],
-  },
-  {
-    feature: 'Personalized Health Tips',
-    images: [
-      '/oral-scan/feature3-1.png',
-      '/oral-scan/feature3-2.png',
-      '/oral-scan/feature3-3.png',
-    ],
-  },
-];
-
-export default function OralScanMobile() {
-  const [currentFullWidthImage, setCurrentFullWidthImage] = useState(0);
-  const [currentFeatureImages, setCurrentFeatureImages] = useState(
-    new Array(featureImages.length).fill(0)
-  );
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentFullWidthImage((prev) => (prev + 1) % fullWidthImages.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentFeatureImages((prev) =>
-        prev.map((imgIndex, idx) => (imgIndex + 1) % featureImages[idx].images.length)
-      );
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleDotClick = (featureIndex, imgIndex) => {
-    setCurrentFeatureImages((prev) => {
-      const newImages = [...prev];
-      newImages[featureIndex] = imgIndex;
-      return newImages;
-    });
+  const toggleFaq = (index) => {
+    setFaqOpen((prev) =>
+      prev.map((open, i) => (i === index ? !open : open))
+    );
   };
 
+  const faqs = [
+    {
+      question: "Significance: Describe how your technology addresses unmet needs.",
+      answer: `Older adults face challenges in accessing timely dental care, particularly in rural areas. 
+               OralScan bridges this gap with a smartphone app that provides affordable, accessible, and effective 
+               dental health monitoring. By leveraging AI and image processing, it offers reliable insights, reduces 
+               barriers to care, and enhances the quality of life for the elderly.`,
+    },
+    {
+      question: "Innovation: What makes OralScan novel and competitive?",
+      answer: `OralScan is innovative because it integrates AI-powered diagnostics into a mobile app, 
+               making dental care affordable and convenient. Its technical novelty lies in using advanced 
+               AI models for quick and reliable analysis, making dental checkups as simple as taking a photo.`,
+    },
+    {
+      question: "Commercialization: What is the market and strategy?",
+      answer: `The target market includes older adults in rural areas and underserved populations. 
+               At $2 per scan or $15 per month, OralScan offers a low-cost, high-value solution. 
+               Partnerships with insurance companies and health organizations ensure affordability and adoption.`,
+    },
+    {
+      question: "Challenge Impact: How will participation help the innovation?",
+      answer: `Participation in this Challenge will provide funding for server costs and user acquisition, mentorship 
+               for strategic partnerships, advanced testing facilities, and access to collaborators like Kaleida Health, 
+               UBMD, and YMCA for market expansion.`,
+    },
+    {
+      question: "What has the project accomplished? In particular, describe the proof-of-concept system and/or solution the project has developed?",
+      answer: `OralScan is an innovative tool that combines AI-driven diagnostics with a user-friendly mobile health platform
+               tailored for seniors and underserved populations, enabling oral health self-assessment at home.
+               Our AI-driven mobile app leverages smartphone cameras to capture intraoral images, enabling AI-powered detection
+               of common oral health issues like cavities, gingivitis, and ulcers. OralScan provides instant diagnostic feedback, with
+               tailored self-care recommendations or alerts for professional care based on severity, bridging healthcare gaps and
+               promoting preventive care for vulnerable populations.`,
+    },
+  ];
+
   return (
-    <div className="bg-gray-50">
-      {/* Full-Width Image Carousel */}
-      <div className="relative w-full h-80 sm:h-96 md:h-[500px] overflow-hidden flex items-center justify-center bg-gradient-to-r from-gray-800 via-blue-900 to-gray-800">
-        <Image
-          src={fullWidthImages[currentFullWidthImage]}
-          alt="Oral Scan Mobile"
-          layout="fill"
-          objectFit="contain"
-          className="transition-transform duration-700 ease-in-out transform hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-black opacity-40"></div>
-        <div className="absolute inset-0 flex items-center justify-center text-center text-white">
-          <h1 className="text-4xl font-extrabold md:text-5xl">
-            Next-Gen Oral Health
-          </h1>
-          <p className="mt-4 text-lg"><br></br>Transforming oral care with AI technology</p>
+    <div className="bg-gray-50 text-gray-900">
+      {/* Header Section */}
+      <div className="bg-gradient-to-r from-blue-800 to-blue-600 text-white text-center py-16">
+        <h1 className="text-5xl font-extrabold">OralScan</h1>
+        <p className="mt-4 text-lg">AI-Powered Accessible Dental Care for Older Adults</p>
+      </div>
+
+      {/* Problem Section */}
+      <section className="py-12 px-6 max-w-6xl mx-auto text-center">
+        <h2 className="text-3xl font-bold text-blue-900 mb-6">The Problem</h2>
+        <p className="text-lg mb-4">
+          Many older adults in rural and underserved areas face barriers to accessing dental care due to financial, geographic, and systemic challenges.
+        </p>
+        <ul className="list-disc pl-6 space-y-2 mx-auto text-left max-w-lg">
+          <li>96% of seniors experience dental caries (cavities).</li>
+          <li>20% suffer from untreated dental decay.</li>
+          <li>68% have periodontal disease, a leading cause of tooth loss.</li>
+        </ul>
+      </section>
+
+      {/* Solution Section */}
+      <section className="bg-gray-100 py-12 px-6 text-center">
+        <h2 className="text-3xl font-bold text-blue-900 mb-6">The Solution</h2>
+        <p className="text-lg mb-4">
+          OralScan is a smartphone app designed to make dental care accessible, affordable, and effective for older adults.
+        </p>
+        <ul className="list-disc pl-6 space-y-2 mx-auto text-left max-w-lg">
+          <li>AI-powered diagnostics for accurate and quick results.</li>
+          <li>Affordable scans at $2 per scan or $15 per month.</li>
+          <li>EHR integration for seamless remote monitoring.</li>
+          <li>Fairness-aware AI for unbiased diagnostics.</li>
+        </ul>
+      </section>
+
+      {/* Key Features Section */}
+      <section className="py-12 px-6 max-w-6xl mx-auto text-center">
+        <h2 className="text-3xl font-bold text-blue-900 mb-6">Key Features</h2>
+        <div className="grid md:grid-cols-2 gap-12 mx-auto max-w-4xl">
+          <div>
+            <h3 className="text-2xl font-semibold text-blue-700 mb-4">User-Focused</h3>
+            <ul className="list-disc pl-6 space-y-2 text-left">
+              <li>Designed for older adults and underserved populations.</li>
+              <li>Simple workflows for easy navigation.</li>
+              <li>Low-cost solutions to reduce reliance on in-person visits.</li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="text-2xl font-semibold text-blue-700 mb-4">Technology and Innovation</h3>
+            <ul className="list-disc pl-6 space-y-2 text-left">
+              <li>Advanced image processing and AI analysis.</li>
+              <li>GPU-accelerated diagnostics within 5 seconds.</li>
+              <li>Encrypted data storage ensuring privacy and security.</li>
+            </ul>
+          </div>
         </div>
-        <div className="absolute bottom-4 flex space-x-2">
-          {fullWidthImages.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentFullWidthImage(index)}
-              className={`w-3 h-3 rounded-full ${
-                currentFullWidthImage === index ? "bg-blue-600" : "bg-gray-400"
-              }`}
-            ></button>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="bg-gray-100 py-12 px-6 text-center">
+        <h2 className="text-3xl font-bold text-blue-900 mb-6">FAQs</h2>
+        <div className="space-y-6 max-w-3xl mx-auto">
+          {faqs.map((faq, index) => (
+            <div key={index} className="border-b pb-4">
+              <button
+                onClick={() => toggleFaq(index)}
+                className="text-lg font-bold text-blue-700 flex justify-between w-full focus:outline-none"
+              >
+                {faq.question}
+                <span>{faqOpen[index] ? "-" : "+"}</span>
+              </button>
+              {faqOpen[index] && <p className="mt-2 text-gray-700">{faq.answer}</p>}
+            </div>
           ))}
         </div>
-      </div>
+      </section>
 
-      {/* Features Sections */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-16">
-        {featureImages.map((feature, index) => (
-          <div
-            key={index}
-            className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center"
-          >
-            <div className="order-2 md:order-1">
-              <h2 className="text-3xl font-bold text-blue-900 mb-4 tracking-wide">
-                {feature.feature}
-              </h2>
-              <p className="text-gray-700 mb-6 leading-relaxed text-lg">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </p>
-              <p className="text-gray-700 leading-relaxed">
-                Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                laboris nisi ut aliquip ex ea commodo consequat.
-              </p>
-            </div>
-            <div className="relative order-1 md:order-2 flex items-center justify-center">
-              <div className="h-400 bg-gray-100 rounded-lg overflow-hidden shadow-lg relative flex items-center justify-center transform hover:scale-105 transition-transform duration-500">
-                <Image
-                  src={feature.images[currentFeatureImages[index]]}
-                  alt={feature.feature}
-                  // layout="fill"
-                  width={300}
-                  height={800}
-                  objectFit="contain"
-                  className="transition-transform duration-700 ease-in-out"
-                />
-              </div>
-              <div className="absolute bottom-4 flex space-x-2">
-                {feature.images.map((_, imgIndex) => (
-                  <button
-                    key={imgIndex}
-                    onClick={() => handleDotClick(index, imgIndex)}
-                    className={`w-3 h-3 rounded-full ${
-                      currentFeatureImages[index] === imgIndex ? "bg-blue-600" : "bg-gray-400"
-                    }`}
-                  ></button>
-                ))}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Download Section */}
-      <div className="bg-gradient-to-r from-blue-800 to-blue-600 py-16">
-        <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-4xl font-bold text-white mb-6">
-            Download the Oral Scan Mobile App
-          </h2>
-          <p className="text-gray-300 mb-8 text-lg">
-            Available on Google Play Store and Apple App Store.
-          </p>
-          <div className="flex justify-center space-x-4 animate-bounce">
-            <a href="#" className="inline-block transform hover:scale-105 transition-transform duration-300">
-              <Image
-                src="/icons/google-play-badge.png"
-                alt="Get it on Google Play"
-                width={160}
-                height={60}
-              />
-            </a>
-            <a href="#" className="inline-block transform hover:scale-105 transition-transform duration-300">
-              <Image
-                src="/icons/app-store-badge.png"
-                alt="Download on the App Store"
-                width={160}
-                height={60}
-              />
-            </a>
-          </div>
-        </div>
-      </div>
+      {/* Footer */}
+      <footer className="bg-blue-900 text-white text-center py-8">
+        <p>Contact us: purusoni@buffalo.edu | kritarth@buffalo.edu</p>
+        <p className="mt-4">&copy; 2024 OralScan. All rights reserved.</p>
+      </footer>
     </div>
   );
 }

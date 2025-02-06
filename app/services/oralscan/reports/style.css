@@ -1,0 +1,170 @@
+/* Report Screen Styles */
+.container {
+  display: flex;
+  flex-direction: column;
+  background-color: #f5f5f5;
+  padding: 20px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 20px;
+  color: #225ea8;
+}
+
+.severity-indicator {
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.severity-text {
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+  text-align: center;
+}
+
+.color-selection {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 10px;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.color-button {
+  width: 100px;
+  height: 50px;
+  margin: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  border: 1px solid #000;
+  cursor: pointer;
+}
+
+.color-button span {
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.image-box {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  aspect-ratio: 1;
+  width: 100px;
+  
+}
+
+.image-box img {
+  border-radius: 10px;
+}
+
+.section-box {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #225ea8;
+}
+
+.section-text {
+  font-size: 14px;
+  color: #333;
+}
+
+.selected {
+  border-color: #fff;
+}
+
+.image-container {
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-container img {
+  width: 90%;
+  height: 90%;
+  border-radius: 10px;
+}
+
+.statistics-container {
+  margin-top: 16px;
+}
+
+.disease-row {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.disease-label {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.disease-count {
+  font-size: 16px;
+  color: #333;
+}
+
+/* Responsive Styles */
+@media (min-width: 768px) {
+  .image-box {
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .image-box img {
+    width: 32%;
+    height: auto;
+  }
+
+  .color-selection {
+    flex-direction: row;
+    justify-content: space-around;
+  }
+
+  .color-button {
+    width: 120px;
+    height: 60px;
+  }
+}
+
+@media (max-width: 767px) {
+  .image-box img {
+    width: 100%;
+    height: auto;
+  }
+
+  .color-button {
+    width: 80px;
+    height: 40px;
+  }
+}
